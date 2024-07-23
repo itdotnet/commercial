@@ -11,6 +11,9 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Commercial",
   description: "Commercial is a platform for management a bussiness",
+  icons:{
+    icon:"/assets/images/logo.svg"
+  }
 };
 
 export default function RootLayout({
