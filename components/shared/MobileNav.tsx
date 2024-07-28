@@ -11,6 +11,7 @@ import Image from "next/image"
 import NavItems from "./NavItems"
 import { Button } from "../ui/button"
 import Link from "next/link"
+import { SignedIn } from "@clerk/nextjs"
 
 
 const MobileNav = () => {
@@ -24,9 +25,11 @@ const MobileNav = () => {
                 <SheetContent className="flex flex-col gap-6 bg-white lg:hidden">
                     <Image src="/assets/images/logo.svg" alt="logo" width="128" height="38" />
                     <Separator className="border border-gray-50" />
-                    <Button asChild size="lg" className='rounded-full'>
-                        <Link href="/dashboard">Dashboard</Link>
-                    </Button>
+                    <SignedIn>
+                        <Button asChild size="lg" className='rounded-full'>
+                            <Link href="/dashboard">Dashboard</Link>
+                        </Button>
+                    </SignedIn>
                     <NavItems />
                 </SheetContent>
             </Sheet>
