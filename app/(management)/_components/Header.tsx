@@ -5,7 +5,7 @@ import { UserButton } from '@clerk/nextjs'
 const Header = () => {
     return (
         <header className='w-full border-b'>
-            <div className='wrapper flex items-center justify-between'>
+            <div className='flex items-center justify-between px-5'>
                 <Link className="w-36 mr-3" href="/">
                     <Image src="/assets/images/logo.svg" alt="Commercial logo" width={128} height={38} />
                 </Link>
