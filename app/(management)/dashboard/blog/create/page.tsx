@@ -9,7 +9,7 @@ const Create = () => {
             </section>
 
             <div className='my-8'>
-                <BlogForm />
+                <BlogForm type='Create'/>
             </div>
         </>
     )

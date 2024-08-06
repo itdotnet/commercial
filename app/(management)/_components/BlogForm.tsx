@@ -13,12 +13,15 @@ import { Textarea } from "@/components/ui/textarea"
 import { FileUploader } from "@/components/shared/FileUploader"
 import { useState } from "react"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 
-const BlogForm = () => {
+type BlogFormProps={
+    type:"Create" | "Update"
+}
+
+const BlogForm = ({type}:BlogFormProps) => {
     const [files, setFiles] = useState<File[]>([]);
-    const initialValues = blogDefaultValues;
+    const initialValues =blogDefaultValues;
 
     const form = useForm<z.infer<typeof blogFormSchema>>({
         resolver: zodResolver(blogFormSchema),
@@ -49,7 +52,7 @@ const BlogForm = () => {
 
                         <FormField
                             control={form.control}
-                            name="description"
+                            name="categoryId"
                             render={({ field }) => (
                                 <FormItem className="w-full">
                                     <FormControl className="h-72">
@@ -90,7 +93,7 @@ const BlogForm = () => {
 
                         <FormField
                             control={form.control}
-                            name="metaDescription"
+                            name="imageUl"
                             render={({ field }) => (
                                 <FormItem className="w-full">
                                     <FormControl className="h-72">
@@ -108,18 +111,18 @@ const BlogForm = () => {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <label className="inline-flex items-center mb-5 cursor-pointer">
+                                        <Label className="inline-flex items-center mb-5 cursor-pointer">
                                         <span className="me-3 text-sm font-medium text-gray-900 dark:text-gray-300">Active</span>
-                                            <input type="checkbox" value="" className="sr-only peer" onChange={field.onChange} checked={field.value} />
+                                            <Checkbox className="sr-only peer" onChange={field.onChange} checked={field.value} />
                                             <div className="relative w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-blue-300 dark:peer-focus:bg-primary-500 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-primary-500"></div>
-                                        </label>
+                                        </Label>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
                     </div>
-                    <Button type="submit">Submit</Button>
+                    <Button type="submit" size="lg" disabled={form.formState.isSubmitting} className="button col-span-2 w-full">{form.formState.isSubmitting?'Submitting...':`${type} Topic`}</Button>
                 </form>
             </Form>
         </div>

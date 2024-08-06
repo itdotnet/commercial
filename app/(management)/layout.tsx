@@ -9,7 +9,7 @@ export default function RootLayout({
         <div className="flex h-screen flex-col">
             <Header />
 
-            <main className="flex-1">
+            <main className="flex-1 wrapper">
                 <div className="flex flex-col sm:flex-row">
                     <aside id="default-sidebar" className="top-0 left-0 z-40 w-full sm:w-64 h-screen sm:translate-x-0" aria-label="Sidebar">
                         <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
