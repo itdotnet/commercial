@@ -1,3 +1,20 @@
+// ====== USER PARAMS
+export type CreateUserParams={
+    clerkId:string
+    firstName:string | null
+    lastName:string | null
+    userName:string
+    email:string
+    photo:string
+}
+
+export type UpdateUserParams = {
+    firstName: string
+    lastName: string
+    username: string
+    photo: string
+}
+
 // ====== URL QUERY PARAMS
 export type UrlQueryParams = {
     params: string
