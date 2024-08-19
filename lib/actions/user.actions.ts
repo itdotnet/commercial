@@ -1,19 +1,22 @@
-import { CreateUserParams, UpdateUserParams } from "@/types";
-import { connectToDatabase } from "../database";
-import User from "../database/models/user.model";
-import { handleError } from "../utils";
-import Topic from "../database/models/topic.model";
-import { revalidatePath } from "next/cache";
+'use server'
 
+import { revalidatePath } from 'next/cache'
 
-export async function createUser(user:CreateUserParams){
-    try{
-        await connectToDatabase();
+import { connectToDatabase } from '@/lib/database'
+import User from '@/lib/database/models/user.model'
+import Topic from '@/lib/database/models/topic.model'
+import { handleError } from '@/lib/utils'
 
-        const newUser=await User.create(user);
-        return JSON.parse(JSON.stringify(newUser));
-    } catch (error){
-        handleError(error);
+import { CreateUserParams, UpdateUserParams } from '@/types'
+
+export async function createUser(user: CreateUserParams) {
+    try {
+        await connectToDatabase()
+
+        const newUser = await User.create(user)
+        return JSON.parse(JSON.stringify(newUser))
+    } catch (error) {
+        handleError(error)
     }
 }
 
@@ -71,7 +74,7 @@ export async function deleteUser(clerkId: string) {
         await Promise.all([
             // Update the 'events' collection to remove references to the user
             Topic.updateMany(
-                { _id: { $in: userToDelete.topics } },
+                { _id: { $in: userToDelete.events } },
                 { $pull: { organizer: userToDelete._id } }
             ),
 
