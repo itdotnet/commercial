@@ -1,7 +1,20 @@
 import BlogForm from '@/app/(management)/_components/BlogForm'
+import { auth } from '@clerk/nextjs/server'
 import React from 'react'
 
-const Create = () => {
+type UpdateTopicProps={
+    params:{
+        id:string
+    }
+}
+
+const UpdateTopic =async ({params:{id}}:UpdateTopicProps) => {
+    //const topic=await getTopic
+
+    const {sessionClaims}=auth();
+
+    const userId=sessionClaims?.userId as string;
+
     return (
         <>
             <section className='bg-primary-50 bg-dotted-pattern bg-cover bg-center py-5 md:py-10 px-5'>
@@ -9,10 +22,10 @@ const Create = () => {
             </section>
 
             <div className='wrapper my-8'>
-                <BlogForm />
+                <BlogForm type='Update' userId={userId}/>
             </div>
         </>
     )
 }
 
-export default Create
+export default UpdateTopic

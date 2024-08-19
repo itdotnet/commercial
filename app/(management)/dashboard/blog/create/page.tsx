@@ -1,7 +1,12 @@
 import BlogForm from '@/app/(management)/_components/BlogForm'
+import { auth } from '@clerk/nextjs/server';
 import React from 'react'
 
 const Create = () => {
+    const {sessionClaims}=auth();
+
+    const userId=sessionClaims?.userId as string;
+
     return (
         <>
             <section className='bg-primary-50 bg-dotted-pattern bg-cover bg-center py-5 md:py-10 px-5'>
@@ -9,7 +14,7 @@ const Create = () => {
             </section>
 
             <div className='my-8'>
-                <BlogForm type='Create'/>
+                <BlogForm type='Create' userId={userId}/>
             </div>
         </>
     )
