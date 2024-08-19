@@ -74,7 +74,7 @@ export async function deleteUser(clerkId: string) {
         await Promise.all([
             // Update the 'events' collection to remove references to the user
             Topic.updateMany(
-                { _id: { $in: userToDelete.events } },
+                { _id: { $in: userToDelete.topics } },
                 { $pull: { organizer: userToDelete._id } }
             ),
 

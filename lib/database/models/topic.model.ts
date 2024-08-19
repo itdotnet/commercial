@@ -1,4 +1,4 @@
-import { Document, model, Schema } from "mongoose";
+import { Document, model, models, Schema } from "mongoose";
 
 export interface ITopic extends Document{
     _id:string;
@@ -21,6 +21,6 @@ const TopicSchema=new Schema({
     organizer:{type:Schema.Types.ObjectId,ref:'User'}
 })
 
-const Topic=model('Topic',TopicSchema);
+const Topic=models?.Topic || model('Topic',TopicSchema);
 
 export default Topic;
