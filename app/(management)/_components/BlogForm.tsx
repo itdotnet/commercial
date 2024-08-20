@@ -43,7 +43,7 @@ const BlogForm = ({userId,type,topic,topicId}:BlogFormProps) => {
 
     async function onSubmit(values: z.infer<typeof blogFormSchema>) {
         let uploadedImageUrl=values.imageUrl;
-
+        
         if(files.length>0){
             const uploadedImages=await startUpload(files);
 
@@ -63,7 +63,7 @@ const BlogForm = ({userId,type,topic,topicId}:BlogFormProps) => {
 
                 if(newTopic){
                     form.reset();
-                    router.push(`/dashboard/blog/${newTopic._id}`);
+                    router.push(`/dashboard/blog/${newTopic._id}/update`);
                 }
             } catch (error){
                 console.log(error);
@@ -79,12 +79,12 @@ const BlogForm = ({userId,type,topic,topicId}:BlogFormProps) => {
                 const updatedTopic=await updateTopic({
                     userId,
                     topic:{...values,_id:topicId!,imageUrl:uploadedImageUrl},
-                    path:`/dashboard/blog/${topicId}`
+                    path:`/dashboard/blog/${topicId}/update`
                 });
 
                 if(updatedTopic){
-                    form.reset();
-                    router.push(`/dashboard/blog/${updatedTopic._id}`);
+                    //form.reset();
+                    //router.push(`/dashboard/blog/${topicId}/update`);
                 }
 
             } catch(error){

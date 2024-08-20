@@ -1,4 +1,5 @@
 import BlogForm from '@/app/(management)/_components/BlogForm'
+import { getTopicById } from '@/lib/actions/topic.actions'
 import { auth } from '@clerk/nextjs/server'
 import React from 'react'
 
@@ -9,7 +10,7 @@ type UpdateTopicProps={
 }
 
 const UpdateTopic =async ({params:{id}}:UpdateTopicProps) => {
-    //const topic=await getTopic
+    const topic=await getTopicById(id);
 
     const {sessionClaims}=auth();
 
@@ -22,7 +23,7 @@ const UpdateTopic =async ({params:{id}}:UpdateTopicProps) => {
             </section>
 
             <div className='wrapper my-8'>
-                <BlogForm type='Update' userId={userId}/>
+                <BlogForm type='Update' userId={userId} topic={topic} topicId={topic._id}/>
             </div>
         </>
     )

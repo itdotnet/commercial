@@ -6,7 +6,13 @@ import { connectToDatabase } from "../database";
 import User from "../database/models/user.model";
 import Topic from "../database/models/topic.model";
 import { revalidatePath } from "next/cache";
+import Category from "../database/models/category.model";
 
+const populateTopic = (query:any)=>{
+    return query
+        .populate({path:'organizer',model:User,select:'_id firstName lastName'})
+        .populate({path:'category',model:Category,select:'_id name'})
+}
 
 //CREATE
 export async function createTopic({userId,topic,path}:CreateTopicParams){
@@ -44,6 +50,21 @@ export async function updateTopic({userId,topic,path}:UpdateTopicParams) {
 
         return JSON.parse(JSON.stringify(updatedTopic));
     } catch(error) {
+        handleError(error);
+    }
+}
+
+//GET ONE TOPIC BY ID
+export async function getTopicById(topicId:string){
+    try {
+        await connectToDatabase();
+
+        const topic=await populateTopic(Topic.findById(topicId));
+
+        if(!topic) throw new Error('Topic not found');
+
+        return JSON.parse(JSON.stringify(topic));
+    } catch (error) {
         handleError(error);
     }
 }
