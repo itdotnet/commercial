@@ -1,3 +1,5 @@
+'use server'
+
 import { CreateTopicParams, UpdateTopicParams } from "@/types";
 import { handleError } from "../utils";
 import { connectToDatabase } from "../database";
