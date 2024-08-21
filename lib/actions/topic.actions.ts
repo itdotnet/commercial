@@ -22,7 +22,7 @@ export async function createTopic({userId,topic,path}:CreateTopicParams){
         const organizer = await User.findById(userId);
         if(!organizer) throw new Error('Organizer not found');
 
-        const newTopic=await Topic.create({...topic,category:topic.categoryId,organizer:userId});
+        const newTopic=await Topic.create({...topic,category:topic.categoryId!?topic.categoryId:null,organizer:userId});
         revalidatePath(path);
 
         return JSON.parse(JSON.stringify(newTopic));

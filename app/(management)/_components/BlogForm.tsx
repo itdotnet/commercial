@@ -17,24 +17,26 @@ import { ITopic } from "@/lib/database/models/topic.model"
 import { useUploadThing } from "@/lib/uploadthing"
 import { createTopic, updateTopic } from "@/lib/actions/topic.actions"
 import { useRouter } from "next/navigation"
+import toast,{Toaster} from 'react-hot-toast';
 
-type BlogFormProps={
-    userId:string,
-    type:"Create" | "Update",
-    topic?:ITopic,
-    topicId?:string
+
+type BlogFormProps = {
+    userId: string,
+    type: "Create" | "Update",
+    topic?: ITopic,
+    topicId?: string
 }
 
-const BlogForm = ({userId,type,topic,topicId}:BlogFormProps) => {
+const BlogForm = ({ userId, type, topic, topicId }: BlogFormProps) => {
     const [files, setFiles] = useState<File[]>([]);
-    const initialValues =topic && type==='Update'?
+    const initialValues = topic && type === 'Update' ?
         {
             ...topic,
-            categoryId:topic.category?._id
-        }:blogDefaultValues;
-        const router=useRouter();
+            categoryId: topic.category?._id
+        } : blogDefaultValues;
+    const router = useRouter();
 
-    const {startUpload} = useUploadThing('imageUploader');
+    const { startUpload } = useUploadThing('imageUploader');
 
     const form = useForm<z.infer<typeof blogFormSchema>>({
         resolver: zodResolver(blogFormSchema),
@@ -42,52 +44,58 @@ const BlogForm = ({userId,type,topic,topicId}:BlogFormProps) => {
     })
 
     async function onSubmit(values: z.infer<typeof blogFormSchema>) {
-        let uploadedImageUrl=values.imageUrl;
-        
-        if(files.length>0){
-            const uploadedImages=await startUpload(files);
+        let uploadedImageUrl = values.imageUrl;
 
-            if(!uploadedImages)
+        if (files.length > 0) {
+            const uploadedImages = await startUpload(files);
+
+            if (!uploadedImages)
                 return;
 
-            uploadedImageUrl=uploadedImages[0].url;
+            uploadedImageUrl = uploadedImages[0].url;
         }
-
-        if(type==='Create'){
-            try{
-                const newTopic=await createTopic({
-                    topic:{...values,imageUrl:uploadedImageUrl},
+        
+        if (type === 'Create') {
+            try {
+                const newTopic = await createTopic({
+                    topic: { ...values, imageUrl: uploadedImageUrl },
                     userId,
-                    path:'/profile'
+                    path: '/profile'
                 });
 
-                if(newTopic){
+                if (newTopic) {
                     form.reset();
+                    toast.success('The topic has been successfully created!',{
+                        duration: 4000,
+                        className:'text-center'
+                    });
                     router.push(`/dashboard/blog/${newTopic._id}/update`);
                 }
-            } catch (error){
+            } catch (error) {
                 console.log(error);
             }
         }
-        else{
-            if(!topicId){
+        else {
+            if (!topicId) {
                 router.back();
                 return;
             }
 
-            try{
-                const updatedTopic=await updateTopic({
+            try {
+                const updatedTopic = await updateTopic({
                     userId,
-                    topic:{...values,_id:topicId!,imageUrl:uploadedImageUrl},
-                    path:`/dashboard/blog/${topicId}/update`
+                    topic: { ...values, _id: topicId!, imageUrl: uploadedImageUrl },
+                    path: `/dashboard/blog/${topicId}/update`
                 });
 
-                if(updatedTopic){
-                    //form.reset();
-                    //router.push(`/dashboard/blog/${topicId}/update`);
+                if (updatedTopic) {
+                    toast.success('The topic has been successfully updated!',{
+                        duration: 4000,
+                        className:'text-center'
+                    });
                 }
 
-            } catch(error){
+            } catch (error) {
                 console.log(error);
             }
         }
@@ -158,14 +166,14 @@ const BlogForm = ({userId,type,topic,topicId}:BlogFormProps) => {
                             render={({ field }) => (
                                 <FormItem className="w-full">
                                     <FormControl className="h-72">
-                                        <FileUploader onFieldChange={field.onChange} imageUrl={field.value} setFiles={setFiles} />
+                                        <FileUploader onFieldChange={field.onChange} imageUrl={field.value} setFiles={setFiles}/>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
                     </div>
-                    
+
                     <div className="flex flex-col gap-5 md:flex-row">
                         <FormField
                             control={form.control}
@@ -174,8 +182,8 @@ const BlogForm = ({userId,type,topic,topicId}:BlogFormProps) => {
                                 <FormItem>
                                     <FormControl>
                                         <Label className="inline-flex items-center mb-5 cursor-pointer">
-                                        <span className="me-3 text-sm font-medium text-gray-900 dark:text-gray-300">Active</span>
-                                            <input type="checkbox" onChange={field.onChange} checked={field.value} className="sr-only peer"/>
+                                            <span className="me-3 text-sm font-medium text-gray-900 dark:text-gray-300">Active</span>
+                                            <input type="checkbox" onChange={field.onChange} checked={field.value} className="sr-only peer" />
                                             <div className="relative w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-blue-300 dark:peer-focus:bg-primary-500 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-primary-500"></div>
                                         </Label>
                                     </FormControl>
@@ -184,7 +192,8 @@ const BlogForm = ({userId,type,topic,topicId}:BlogFormProps) => {
                             )}
                         />
                     </div>
-                    <Button type="submit" size="lg" disabled={form.formState.isSubmitting} className="button col-span-2 w-full">{form.formState.isSubmitting?'Submitting...':`${type} Topic`}</Button>
+                    <Button type="submit" size="lg" disabled={form.formState.isSubmitting} className="button col-span-2 w-full">{form.formState.isSubmitting ? 'Submitting...' : `${type} Topic`}</Button>
+                    <Toaster />
                 </form>
             </Form>
         </div>
