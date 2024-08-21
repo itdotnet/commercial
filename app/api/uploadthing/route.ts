@@ -13,16 +13,6 @@ export const { GET, POST } = createRouteHandler({
   // config: { ... },
 });
 
-// export const fileDelete = async (fileKey: string) => {
-//   try {
-//     await utapi.deleteFiles(fileKey);
-//     return { success: true };
-//   }
-//   catch (error) {
-//     return { success: false };
-//   }
-// }
-
 export async function DELETE(request: Request) {
   try {
     const data = await request.json();
