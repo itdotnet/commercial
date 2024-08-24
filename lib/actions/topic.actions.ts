@@ -1,12 +1,16 @@
 'use server'
 
-import { CreateTopicParams, UpdateTopicParams } from "@/types";
+import { CreateTopicParams, DeleteTopicParams, GetAllTopicsParams, UpdateTopicParams } from "@/types";
 import { handleError } from "../utils";
 import { connectToDatabase } from "../database";
 import User from "../database/models/user.model";
 import Topic from "../database/models/topic.model";
 import { revalidatePath } from "next/cache";
 import Category from "../database/models/category.model";
+
+const getCategoryByName=async (name:string)=>{
+    return Category.findOne({name:{$regex:name,$options:'i'}});
+}
 
 const populateTopic = (query:any)=>{
     return query
@@ -64,6 +68,47 @@ export async function getTopicById(topicId:string){
         if(!topic) throw new Error('Topic not found');
 
         return JSON.parse(JSON.stringify(topic));
+    } catch (error) {
+        handleError(error);
+    }
+}
+
+//GET ALL TOPICS
+export async function getAllTopics({query,category,limit=10,page}:GetAllTopicsParams){
+    try {
+        await connectToDatabase();
+
+        const titleCondition=query?{title:{$regex:query,$options:'i'}}:{};
+        const categoryCondition=category?await getCategoryByName(category):null;
+        const conditions={
+            $and:[titleCondition,categoryCondition?{category:categoryCondition._id}:{}]
+        }
+
+        const skipAmount=(Number(page-1)*limit);
+        const topicsQuery=Topic.find(conditions)
+            .sort({createdAt:'desc'})
+            .skip(skipAmount)
+            .limit(limit);
+
+        const topics=await populateTopic(topicsQuery);
+        const topicsCount=await Topic.countDocuments(conditions);
+
+        return{
+            data:JSON.parse(JSON.stringify(topics)),
+            totalPages:Math.ceil(topicsCount/limit)
+        }
+    } catch (error) {
+        handleError(error);
+    }
+}
+
+//DELETE TOPIC
+export async function deleteTopic({topicId,path}:DeleteTopicParams) {
+    try {
+        await connectToDatabase();
+
+        const deleteTopic=await Topic.findByIdAndDelete(topicId);
+        if(deleteTopic) revalidatePath(path);
     } catch (error) {
         handleError(error);
     }

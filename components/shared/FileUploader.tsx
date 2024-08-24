@@ -52,7 +52,7 @@ export function FileUploader({ imageUrl, onFieldChange, setFiles }: FileUploader
                         className="w-full object-cover object-center"
                     />
                     <div onClick={()=>startTransition(handleDeleteImage)} className="absolute right-2 top-2 flex flex-col gap-4 rounded-xl bg-white p-3 shadow-sm transition-all cursor-pointer">
-                        <Image className='z-50' src="/assets/icons/delete.svg" alt="edit" width={20} height={20} />
+                        <Image src="/assets/icons/delete.svg" alt="edit" width={20} height={20} />
                     </div>
                 </div>
             ) : (

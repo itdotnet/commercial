@@ -29,6 +29,8 @@ export const blogDefaultValues = {
     title: '',
     description: '',
     imageUrl: '',
+    createdAt:new Date(),
+    updatedAt:new Date(),
     metaDescription: '',
     categoryId: '',
     isActive: true

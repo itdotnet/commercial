@@ -44,6 +44,8 @@ export type CreateTopicParams = {
         title:string
         description:string
         imageUrl:string
+        createdAt?:Date
+        updatedAt?:Date
         metaDescription:string
         categoryId:string
         isActive:boolean
@@ -58,9 +60,23 @@ export type UpdateTopicParams={
         title:string
         description:string
         imageUrl:string
+        createdAt?:Date,
+        updatedAt?:Date,
         metaDescription:string
         categoryId:string
         isActive:boolean
     }
     path:string
+}
+
+export type DeleteTopicParams={
+    topicId:string
+    path:string
+}
+
+export type GetAllTopicsParams={
+    query:string
+    category:string
+    limit:number
+    page:number
 }

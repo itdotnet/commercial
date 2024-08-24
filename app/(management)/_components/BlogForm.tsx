@@ -58,7 +58,7 @@ const BlogForm = ({ userId, type, topic, topicId }: BlogFormProps) => {
         if (type === 'Create') {
             try {
                 const newTopic = await createTopic({
-                    topic: { ...values, imageUrl: uploadedImageUrl },
+                    topic: { ...values,createdAt:new Date(), imageUrl: uploadedImageUrl },
                     userId,
                     path: '/profile'
                 });
@@ -84,7 +84,7 @@ const BlogForm = ({ userId, type, topic, topicId }: BlogFormProps) => {
             try {
                 const updatedTopic = await updateTopic({
                     userId,
-                    topic: { ...values, _id: topicId!, imageUrl: uploadedImageUrl },
+                    topic: { ...values,updatedAt:new Date(), _id: topicId!, imageUrl: uploadedImageUrl },
                     path: `/dashboard/blog/${topicId}/update`
                 });
 

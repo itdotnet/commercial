@@ -5,6 +5,8 @@ export interface ITopic extends Document{
     title:string;
     description:string;
     imageUrl?:string;
+    createdAt:Date;
+    updatedAt:Date;
     metaDescription:string;
     isActive:boolean;
     category?:{_id:string,name:string};
@@ -15,6 +17,8 @@ const TopicSchema=new Schema({
     title:{type:String,require:true},
     description:{type:String,required:true},
     imageUrl:{type:String},
+    createdAt:{type:Date},
+    updatedAt:{type:Date},
     metaDescription:{type:String,required:true},
     isActive:{type:Boolean,default:true},
     category:{type:Schema.Types.ObjectId,ref:'Category'},
