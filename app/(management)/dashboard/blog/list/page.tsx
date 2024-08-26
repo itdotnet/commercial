@@ -18,19 +18,21 @@ import Link from 'next/link';
 import DeleteConfirmation from '@/components/shared/DeleteConfirmation';
 import Search from '@/components/shared/Search';
 import CategoryFilter from '@/components/shared/CategoryFilter';
+import Pagination from '@/components/shared/Pagination';
 
 const TopicList = async ({ searchParams }: SearchParamProps) => {
     const page = Number(searchParams?.page) || 1;
     const searchText = (searchParams?.query as string) || '';
     const category = (searchParams?.category as string) || '';
+    const limit = 3;
 
     const topics = await getAllTopics({
         query: searchText,
         category,
         page,
-        limit: 10
+        limit: limit
     });
-    const list = topics?.data;
+    const list = topics?.data as ITopic[];
     return (
         <>
             <section className='bg-primary-50 bg-dotted-pattern bg-cover bg-center py-5 md:py-10 px-5'>
@@ -41,7 +43,7 @@ const TopicList = async ({ searchParams }: SearchParamProps) => {
                 <Search />
                 <CategoryFilter />
             </div>
-            <Table>
+            <Table className='mb-10'>
                 <TableCaption>A list of your topics.</TableCaption>
                 <TableHeader>
                     <TableRow>
@@ -53,7 +55,7 @@ const TopicList = async ({ searchParams }: SearchParamProps) => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {list.map((topic: ITopic) => (
+                    {list.map((topic) => (
                         <TableRow key={topic._id}>
                             <TableCell className="font-medium">{topic.title}</TableCell>
                             <TableCell className="font-medium">{topic.category?.name}</TableCell>
@@ -70,6 +72,10 @@ const TopicList = async ({ searchParams }: SearchParamProps) => {
                     ))}
                 </TableBody>
             </Table>
+
+            {topics?.totalPages && topics.totalPages > 1 && (
+                <Pagination urlParamName='page' page={page} totalPages={topics.totalPages} />
+            )}
         </>
     )
 }
