@@ -19,6 +19,8 @@ module.exports = withUt({
     },
     extend: {
       colors: {
+        background: "hsl(var(--background))",
+        foreground: 'hsl(var(--foreground))',
         primary: {
           500: '#BF2630',
           50: ' #F6F8FD',
@@ -40,7 +42,6 @@ module.exports = withUt({
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
-        foreground: 'hsl(var(--foreground))',
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))',
