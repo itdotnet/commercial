@@ -1,5 +1,5 @@
 import React from 'react'
-import { ContentLayout } from '../_components/admin-panel/content-layout'
+import { ContentLayout } from '../_components/content-layout'
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb'
 import { Card, CardContent } from '@/components/ui/card'
 import Link from 'next/link'

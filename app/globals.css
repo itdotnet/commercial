@@ -81,6 +81,15 @@ body {
   filter: brightness(0) saturate(100%) invert(47%) sepia(0%) saturate(217%) hue-rotate(32deg) brightness(98%) contrast(92%);
 }
 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
 /* ========================================== TAILWIND STYLES */
 @layer utilities {
   .wrapper {

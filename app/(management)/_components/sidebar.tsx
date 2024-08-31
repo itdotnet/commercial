@@ -7,6 +7,7 @@ import { useSidebarToggle } from "@/hooks/use-sidebar-toggle";
 import Menu from "./menu";
 import { useStore } from "@/hooks/use-store";
 import { SidebarToggle } from "./sidebar-toggle";
+import Image from "next/image";
 
 export function Sidebar() {
   const sidebar = useStore(useSidebarToggle, (state) => state);
@@ -31,7 +32,7 @@ export function Sidebar() {
           asChild
         >
           <Link href="/dashboard" className="flex items-center gap-2">
-            <PanelsTopLeft className="w-6 h-6 mr-1" />
+            {/* <PanelsTopLeft className="w-6 h-6 mr-1" />
             <h1
               className={cn(
                 "font-bold text-lg whitespace-nowrap transition-[transform,opacity,display] ease-in-out duration-300",
@@ -41,11 +42,12 @@ export function Sidebar() {
               )}
             >
               Brand
-            </h1>
+            </h1> */}
+            <Image src="/assets/images/logo.svg" alt="Commercial logo" width={128} height={38} />
           </Link>
         </Button>
         <Menu isOpen={sidebar?.isOpen} />
       </div>
     </aside>
-  );
+  )
 }
