@@ -77,7 +77,7 @@ export type DeleteTopicParams={
 
 export type GetAllTopicsParams={
     query:string
-    category:string
+    category?:string
     limit:number
     page:number
 }
