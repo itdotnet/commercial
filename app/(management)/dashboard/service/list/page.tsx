@@ -37,7 +37,7 @@ const TopicList = async ({ searchParams }: SearchParamProps) => {
     });
     const list = topics?.data as ITopic[];
     return (
-        <ContentLayout title="All Posts">
+        <ContentLayout title="All Services">
             <Breadcrumb>
                 <BreadcrumbList>
                     <BreadcrumbItem>
@@ -93,7 +93,10 @@ const TopicList = async ({ searchParams }: SearchParamProps) => {
                                     ))}
                                 </TableBody>
                             </Table>
-                            <Pagination urlParamName='page' page={page} totalPages={topics?.totalPages} />
+
+                            {topics?.totalPages && topics.totalPages > 1 && (
+                                <Pagination urlParamName='page' page={page} totalPages={topics.totalPages} />
+                            )}
                     </div>
                 </CardContent>
             </Card>

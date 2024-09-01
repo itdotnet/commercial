@@ -7,13 +7,15 @@ import { formUrlQuery } from '@/lib/utils'
 
 type PaginationProps = {
     page: number | string
-    totalPages: number
+    totalPages?: number
     urlParamName: string
 }
 
 const Pagination = ({ page, totalPages, urlParamName }: PaginationProps) => {
     const router = useRouter();
     const searchParams = useSearchParams();
+    
+    if(!totalPages) return;
 
     const onClick = (btnType: string) => {
         const pageValue = btnType === 'next' ? Number(page) + 1 : Number(page) - 1;

@@ -57,10 +57,17 @@ export const formatPrice = (price: string) => {
   return formattedPrice
 }
 
-export function formUrlQuery({ params, key, value }: UrlQueryParams) {
+export function formUrlQuery({ params, key, value,keysToRemove }: UrlQueryParams) {
   const currentUrl = qs.parse(params)
 
   currentUrl[key] = value
+
+  if(keysToRemove)
+  {
+    keysToRemove.forEach(key => {
+      delete currentUrl[key]
+    })
+  }
 
   return qs.stringifyUrl(
     {

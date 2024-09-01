@@ -30,7 +30,8 @@ const CategoryFilter = () => {
             newUrl=formUrlQuery({
                 params:searchParams.toString(),
                 key:'category',
-                value:category
+                value:category,
+                keysToRemove:['page']
             });
         }
         else{
