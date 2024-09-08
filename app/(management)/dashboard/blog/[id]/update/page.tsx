@@ -21,7 +21,7 @@ const UpdateTopic =async ({params:{id}}:UpdateTopicProps) => {
     const userId=sessionClaims?.userId as string;
 
     return (
-        <ContentLayout title={`Edit Topic: ${topic.title}`}>
+        <ContentLayout title={`Edit Post: ${topic.title}`}>
             <Breadcrumb>
                 <BreadcrumbList>
                     <BreadcrumbItem>
