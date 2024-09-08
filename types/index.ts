@@ -48,7 +48,7 @@ export type CreateTopicParams = {
         createdAt?:Date
         updatedAt?:Date
         metaDescription:string
-        categoryId:string
+        categoryId?:string
         isActive:boolean
     }
     path:string
@@ -64,7 +64,7 @@ export type UpdateTopicParams={
         createdAt?:Date,
         updatedAt?:Date,
         metaDescription:string
-        categoryId:string
+        categoryId?:string
         isActive:boolean
     }
     path:string

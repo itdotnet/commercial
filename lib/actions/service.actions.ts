@@ -68,25 +68,15 @@ export async function getServiceById(serviceId:string){
 }
 
 //GET ALL SERVICES
-export async function getAllServices({query,limit=10,page}:GetAllTopicsParams){
+export async function getAllServices(){
     try {
         await connectToDatabase();
 
-        const titleCondition=query?{title:{$regex:query,$options:'i'}}:{};
-
-        const skipAmount=(Number(page-1)*limit);
-        const servicesQuery=Service.find(titleCondition)
-            .sort({createdAt:'desc'})
-            .skip(skipAmount)
-            .limit(limit);
+        const servicesQuery=Service.find()
 
         const services=await populateService(servicesQuery);
-        const servicesCount=await Service.countDocuments(titleCondition);
 
-        return{
-            data:JSON.parse(JSON.stringify(services)),
-            totalPages:Math.ceil(servicesCount/limit)
-        }
+        return JSON.parse(JSON.stringify(services));
     } catch (error) {
         handleError(error);
     }

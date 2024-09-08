@@ -1,53 +1,54 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { blogFormSchema } from "@/lib/validation"
+import { serviceFormSchema } from "@/lib/validation"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { blogDefaultValues } from "@/constants"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { FormField, FormItem, FormControl, FormMessage, Form } from "@/components/ui/form"
-import Dropdown from "./Dropdown"
 import { Textarea } from "@/components/ui/textarea"
 import { FileUploader } from "@/components/shared/FileUploader"
 import { useRef, useState } from "react"
 import { Label } from "@/components/ui/label"
-import { ITopic } from "@/lib/database/models/topic.model"
 import { useUploadThing } from "@/lib/uploadthing"
-import { createTopic, updateTopic } from "@/lib/actions/topic.actions"
 import { useRouter } from "next/navigation"
 import toast, { Toaster } from 'react-hot-toast';
 import { Editor } from '@tinymce/tinymce-react';
 import { Editor as TinyMCEEditor } from 'tinymce';
+import { IService } from "@/lib/database/models/service.model"
+import { createService, updateService } from "@/lib/actions/service.actions"
 
-type BlogFormProps = {
+type ServiceFormProps = {
     userId: string,
     type: "Create" | "Update",
-    topic?: ITopic,
-    topicId?: string
+    service?: IService,
+    serviceId?: string
 }
 
-type AddBlogInputType = z.infer<typeof blogFormSchema>;
-const BlogForm = ({ userId, type, topic, topicId }: BlogFormProps) => {
+type AddServiceInputType = z.infer<typeof serviceFormSchema>;
+const BlogForm = ({ userId, type, service, serviceId }: ServiceFormProps) => {
     const editorRef = useRef<TinyMCEEditor | null>(null);
     const [files, setFiles] = useState<File[]>([]);
-    const initialValues = topic && type === 'Update' ?
+    const initialValues = service && type === 'Update' ?
         {
-            ...topic,
-            createdAt:new Date(topic.createdAt),
-            updatedAt:new Date(topic.updatedAt),
-            categoryId: topic.category?._id
+            ...service,
+            createdAt: new Date(service.createdAt),
+            updatedAt: new Date(service.updatedAt)
         } : blogDefaultValues;
+    console.log(initialValues);
     const router = useRouter();
+
     const { startUpload } = useUploadThing('imageUploader');
 
-    const form = useForm<AddBlogInputType>({
-        resolver: zodResolver(blogFormSchema),
+
+    const form = useForm<AddServiceInputType>({
+        resolver: zodResolver(serviceFormSchema),
         defaultValues: initialValues
     })
 
-    async function onSubmit(values: z.infer<typeof blogFormSchema>) {
+    async function onSubmit(values: z.infer<typeof serviceFormSchema>) {
         let uploadedImageUrl = values.imageUrl;
 
         if (files.length > 0) {
@@ -61,39 +62,39 @@ const BlogForm = ({ userId, type, topic, topicId }: BlogFormProps) => {
 
         if (type === 'Create') {
             try {
-                const newTopic = await createTopic({
+                const newService = await createService({
                     topic: { ...values, createdAt: new Date(), imageUrl: uploadedImageUrl },
                     userId,
                     path: '/profile'
                 });
 
-                if (newTopic) {
+                if (newService) {
                     form.reset();
-                    toast.success('The topic has been successfully created!', {
+                    toast.success('The service has been successfully created!', {
                         duration: 4000,
                         className: 'text-center'
                     });
-                    router.push(`/dashboard/blog/${newTopic._id}/update`);
+                    router.push(`/dashboard/service/${newService._id}/update`);
                 }
             } catch (error) {
                 console.log(error);
             }
         }
         else {
-            if (!topicId) {
+            if (!serviceId) {
                 router.back();
                 return;
             }
 
             try {
-                const updatedTopic = await updateTopic({
+                const updatedService = await updateService({
                     userId,
-                    topic: { ...values, updatedAt: new Date(), _id: topicId!, imageUrl: uploadedImageUrl },
-                    path: `/dashboard/blog/${topicId}/update`
+                    topic: { ...values, updatedAt: new Date(), _id: serviceId!, imageUrl: uploadedImageUrl },
+                    path: `/dashboard/service/${serviceId}/update`
                 });
 
-                if (updatedTopic) {
-                    toast.success('The topic has been successfully updated!', {
+                if (updatedService) {
+                    toast.success('The service has been successfully updated!', {
                         duration: 4000,
                         className: 'text-center'
                     });
@@ -109,7 +110,7 @@ const BlogForm = ({ userId, type, topic, topicId }: BlogFormProps) => {
         <div className="px-5">
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
-                    <div className="flex flex-col gap-5 md:flex-row">
+                    <div>
                         <FormField
                             control={form.control}
                             name="title"
@@ -123,20 +124,8 @@ const BlogForm = ({ userId, type, topic, topicId }: BlogFormProps) => {
                             )}
                         />
 
-                        <FormField
-                            control={form.control}
-                            name="categoryId"
-                            render={({ field }) => (
-                                <FormItem className="w-full">
-                                    <FormControl className="h-72">
-                                        <Dropdown onChangeHandler={field.onChange} value={field.value} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
                     </div>
-                    <div className="flex flex-col gap-5 md:flex-row">
+                    <div>
                         <FormField
                             control={form.control}
                             name="description"
@@ -147,11 +136,9 @@ const BlogForm = ({ userId, type, topic, topicId }: BlogFormProps) => {
                                             apiKey='k6phizol048u0brh9q5tx0xp2wcs0sxfp7vp160roa9s3odb'
                                             onInit={(_evt, editor) => editorRef.current = editor}
                                             value={field.value}
-                                            //initialValue={field.value}
                                             onEditorChange={field.onChange}
                                             init={{
                                                 height: 500,
-                                                //menubar: false,
                                                 plugins: [
                                                     'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
                                                     'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
@@ -216,7 +203,7 @@ const BlogForm = ({ userId, type, topic, topicId }: BlogFormProps) => {
                             )}
                         />
                     </div>
-                    <Button type="submit" size="lg" disabled={form.formState.isSubmitting} className="button col-span-2 w-full">{form.formState.isSubmitting ? 'Submitting...' : `${type} Topic`}</Button>
+                    <Button type="submit" size="lg" disabled={form.formState.isSubmitting} className="button col-span-2 w-full">{form.formState.isSubmitting ? 'Submitting...' : `${type} Service`}</Button>
                     <Toaster />
                 </form>
             </Form>

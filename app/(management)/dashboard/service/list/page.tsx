@@ -8,30 +8,19 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { SearchParamProps } from '@/types';
 import Image from 'next/image';
 import { formatDateTime } from '@/lib/utils';
 import Link from 'next/link';
 import DeleteConfirmation from '@/components/shared/DeleteConfirmation';
 import Search from '@/components/shared/Search';
-import Pagination from '@/components/shared/Pagination';
 import { ContentLayout } from '@/app/(management)/_components/content-layout';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { Card, CardContent } from '@/components/ui/card';
 import { getAllServices } from '@/lib/actions/service.actions';
 import { IService } from '@/lib/database/models/service.model';
 
-const ServiceList = async ({ searchParams }: SearchParamProps) => {
-    const page = Number(searchParams?.page) || 1;
-    const searchText = (searchParams?.query as string) || '';
-    const limit = 3;
-
-    const services = await getAllServices({
-        query: searchText,
-        page,
-        limit: limit
-    });
-    const list = services?.data as IService[];
+const ServiceList = async () => {
+    const services = await getAllServices() as IService[];
     return (
         <ContentLayout title="All Services">
             <Breadcrumb>
@@ -70,7 +59,7 @@ const ServiceList = async ({ searchParams }: SearchParamProps) => {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {list.map((service) => (
+                                {services.map((service) => (
                                     <TableRow key={service._id}>
                                         <TableCell className="font-medium">{service.title}</TableCell>
                                         <TableCell className="font-medium">{formatDateTime(service.createdAt).dateOnly}</TableCell>
@@ -86,8 +75,6 @@ const ServiceList = async ({ searchParams }: SearchParamProps) => {
                                 ))}
                             </TableBody>
                         </Table>
-
-                        <Pagination urlParamName='page' page={page} totalPages={services?.totalPages} />
                     </div>
                 </CardContent>
             </Card>

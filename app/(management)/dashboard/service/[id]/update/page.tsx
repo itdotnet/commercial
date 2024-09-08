@@ -1,18 +1,27 @@
-import BlogForm from '@/app/(management)/_components/BlogForm';
-import { ContentLayout } from '@/app/(management)/_components/content-layout';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
-import { Card, CardContent } from '@/components/ui/card';
-import { auth } from '@clerk/nextjs/server';
-import Link from 'next/link';
+import { ContentLayout } from '@/app/(management)/_components/content-layout'
+import ServiceForm from '@/app/(management)/_components/ServiceForm'
+import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator, BreadcrumbPage } from '@/components/ui/breadcrumb'
+import { Card, CardContent } from '@/components/ui/card'
+import { getServiceById } from '@/lib/actions/service.actions'
+import { auth } from '@clerk/nextjs/server'
+import Link from 'next/link'
 import React from 'react'
 
-const Create = () => {
-    const { sessionClaims } = auth();
+type UpdateServiceProps={
+    params:{
+        id:string
+    }
+}
 
-    const userId = sessionClaims?.userId as string;
+const UpdateService =async ({params:{id}}:UpdateServiceProps) => {
+    const service=await getServiceById(id);
+
+    const {sessionClaims}=auth();
+
+    const userId=sessionClaims?.userId as string;
 
     return (
-        <ContentLayout title="New Post">
+        <ContentLayout title={`Edit Service: ${service.title}`}>
             <Breadcrumb>
                 <BreadcrumbList>
                     <BreadcrumbItem>
@@ -29,21 +38,20 @@ const Create = () => {
                     <BreadcrumbSeparator />
                     <BreadcrumbItem>
                         <BreadcrumbLink asChild>
-                            <Link href="/dashboard/blog/list">Posts</Link>
+                            <Link href="/dashboard/blog/list">Services</Link>
                         </BreadcrumbLink>
                     </BreadcrumbItem>
                     <BreadcrumbSeparator />
                     <BreadcrumbItem>
-                        <BreadcrumbPage>New</BreadcrumbPage>
+                        <BreadcrumbPage>Edit {service.title}</BreadcrumbPage>
                     </BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>
-
             <Card className="rounded-lg border-none mt-6">
                 <CardContent className="p-6">
                     <div className="min-h-[calc(100vh-56px-64px-20px-24px-56px-48px)]">
                         <div className='my-8'>
-                            <BlogForm type='Create' userId={userId} />
+                        <ServiceForm type='Update' userId={userId} service={service} serviceId={service._id}/>
                         </div>
                     </div>
                 </CardContent>
@@ -52,4 +60,4 @@ const Create = () => {
     )
 }
 
-export default Create
+export default UpdateService

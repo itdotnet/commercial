@@ -4,7 +4,7 @@ import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbS
 import { Card, CardContent } from '@/components/ui/card'
 import { getTopicById } from '@/lib/actions/topic.actions'
 import { auth } from '@clerk/nextjs/server'
-import { Link } from 'lucide-react'
+import Link from 'next/link'
 import React from 'react'
 
 type UpdateTopicProps={
@@ -21,7 +21,7 @@ const UpdateTopic =async ({params:{id}}:UpdateTopicProps) => {
     const userId=sessionClaims?.userId as string;
 
     return (
-        <ContentLayout title={`Edit ${topic.title}`}>
+        <ContentLayout title={`Edit Topic: ${topic.title}`}>
             <Breadcrumb>
                 <BreadcrumbList>
                     <BreadcrumbItem>
