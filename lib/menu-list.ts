@@ -101,6 +101,24 @@ export function getMenuList(pathname: string): Group[] {
             ]
           },
           {
+            href: "",
+            label: "Orders",
+            active: pathname.includes("/Order"),
+            icon: Warehouse,
+            submenus: [
+              {
+                href: "/dashboard/order/list",
+                label: "All Orders",
+                active: pathname === "/dashboard/order/list"
+              },
+              {
+                href: "/dashboard/order/new",
+                label: "New Order",
+                active: pathname === "/dashboard/order/new"
+              }
+            ]
+          },
+          {
             href: "/categories",
             label: "Categories",
             active: pathname.includes("/categories"),

@@ -16,8 +16,10 @@ import {
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { deleteTopic } from '@/lib/actions/topic.actions'
+import { deleteProduct } from '@/lib/actions/product.actions'
+import { deleteService } from '@/lib/actions/service.actions'
 
-const DeleteConfirmation = ({topicId}:{topicId:string}) => {
+const DeleteConfirmation = ({id,type}:{id:string,type:"topic" | "product" | "service"}) => {
     const pathname=usePathname();
     let [isPending,startTransition]=useTransition();
 
@@ -31,7 +33,7 @@ const DeleteConfirmation = ({topicId}:{topicId:string}) => {
                 <AlertDialogHeader>
                     <AlertDialogTitle>Are you sure you want to delete?</AlertDialogTitle>
                     <AlertDialogDescription className="p-regular-16 text-grey-600">
-                        This will permanently delete this topic
+                        This will permanently delete this {type}
                     </AlertDialogDescription>
                 </AlertDialogHeader>
 
@@ -41,7 +43,12 @@ const DeleteConfirmation = ({topicId}:{topicId:string}) => {
                     <AlertDialogAction
                         onClick={() =>
                             startTransition(async () => {
-                                await deleteTopic({ topicId, path: pathname })
+                                if(type==="topic")
+                                    await deleteTopic({ topicId:id, path: pathname })
+                                else if(type==="product")
+                                    await deleteProduct({ productId:id, path: pathname })
+                                else
+                                    await deleteService({ topicId:id, path: pathname })
                             })
                         }>
                         {isPending ? 'Deleting...' : 'Delete'}

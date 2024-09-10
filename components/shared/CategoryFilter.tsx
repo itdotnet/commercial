@@ -6,15 +6,24 @@ import { formUrlQuery, removeKeysFromQuery } from '@/lib/utils';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ICategory } from '@/lib/database/models/category.model';
 import { getAllCategories } from '@/lib/actions/category.actions';
+import { getAllCategories as getAllProductCategories} from '@/lib/actions/productCategory.actions';
 
-const CategoryFilter = () => {
+type CategoryFilterProps={
+    type:"blogCategory" | "productCategory"
+}
+
+const CategoryFilter = ({type}:CategoryFilterProps) => {
     const [categories,setCategories]=useState<ICategory[]>([]);
     const searchParams=useSearchParams();
     const router=useRouter();
 
     useEffect(() => {
       const getCategories=async()=>{
-        const categoryList=await getAllCategories();
+        let categoryList;
+        if(type==="blogCategory")
+            categoryList=await getAllCategories();
+        else
+            categoryList=await getAllProductCategories();
 
         categoryList && setCategories(categoryList as ICategory[]);
       }

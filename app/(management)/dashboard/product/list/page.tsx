@@ -1,5 +1,4 @@
 
-import { ITopic } from '@/lib/database/models/topic.model'
 import React from 'react'
 import {
     Table,
@@ -10,7 +9,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { getAllTopics } from '@/lib/actions/topic.actions';
 import { SearchParamProps } from '@/types';
 import Image from 'next/image';
 import { formatDateTime } from '@/lib/utils';
@@ -22,22 +20,24 @@ import Pagination from '@/components/shared/Pagination';
 import { ContentLayout } from '@/app/(management)/_components/content-layout';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { Card, CardContent } from '@/components/ui/card';
+import { getAllProducts } from '@/lib/actions/product.actions';
+import { IProduct } from '@/lib/database/models/product.model';
 
-const TopicList = async ({ searchParams }: SearchParamProps) => {
+const ProductList = async ({ searchParams }: SearchParamProps) => {
     const page = Number(searchParams?.page) || 1;
     const searchText = (searchParams?.query as string) || '';
     const category = (searchParams?.category as string) || '';
     const limit = 3;
 
-    const topics = await getAllTopics({
+    const products = await getAllProducts({
         query: searchText,
         category,
         page,
         limit: limit
     });
-    const list = topics?.data as ITopic[];
+    const list = products?.data as IProduct[];
     return (
-        <ContentLayout title="All Posts">
+        <ContentLayout title="All Products">
             <Breadcrumb>
                 <BreadcrumbList>
                     <BreadcrumbItem>
@@ -53,7 +53,7 @@ const TopicList = async ({ searchParams }: SearchParamProps) => {
                     </BreadcrumbItem>
                     <BreadcrumbSeparator />
                     <BreadcrumbItem>
-                        <BreadcrumbPage>Posts</BreadcrumbPage>
+                        <BreadcrumbPage>Products</BreadcrumbPage>
                     </BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>
@@ -65,35 +65,39 @@ const TopicList = async ({ searchParams }: SearchParamProps) => {
                                 <CategoryFilter type='productCategory'/>
                             </div>
                             <Table className='mb-10'>
-                                <TableCaption>A list of your posts.</TableCaption>
+                                <TableCaption>A list of your products.</TableCaption>
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead>Title</TableHead>
                                         <TableHead>Category</TableHead>
+                                        <TableHead>Price</TableHead>
+                                        <TableHead>Count</TableHead>
                                         <TableHead>Created Date</TableHead>
                                         <TableHead>Edit</TableHead>
                                         <TableHead>Delete</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {list.map((topic) => (
-                                        <TableRow key={topic._id}>
-                                            <TableCell className="font-medium">{topic.title}</TableCell>
-                                            <TableCell className="font-medium">{topic.category?.name}</TableCell>
-                                            <TableCell className="font-medium">{formatDateTime(topic.createdAt).dateOnly}</TableCell>
+                                    {list.map((product) => (
+                                        <TableRow key={product._id}>
+                                            <TableCell className="font-medium">{product.title}</TableCell>
+                                            <TableCell className="font-medium">{product.category?.name}</TableCell>
+                                            <TableCell className="font-medium">{product.price} $</TableCell>
+                                            <TableCell className="font-medium">{product.count}</TableCell>
+                                            <TableCell className="font-medium">{formatDateTime(product.createdAt).dateOnly}</TableCell>
                                             <TableCell>
-                                                <Link href={`/dashboard/blog/${topic._id}/update`} className="flex gap-2">
+                                                <Link href={`/dashboard/product/${product._id}/update`} className="flex gap-2">
                                                     <Image src="/assets/icons/edit.svg" alt="edit" width={20} height={20} />
                                                 </Link>
                                             </TableCell>
                                             <TableCell>
-                                                <DeleteConfirmation id={topic._id} type='topic'/>
+                                                <DeleteConfirmation id={product._id} type='product'/>
                                             </TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
                             </Table>
-                            <Pagination urlParamName='page' page={page} totalPages={topics?.totalPages} />
+                            <Pagination urlParamName='page' page={page} totalPages={products?.totalPages} />
                     </div>
                 </CardContent>
             </Card>
@@ -101,4 +105,4 @@ const TopicList = async ({ searchParams }: SearchParamProps) => {
     )
 }
 
-export default TopicList
+export default ProductList

@@ -1,3 +1,4 @@
+
 export const headerLinks = [
     {
         label: 'Home',
@@ -32,6 +33,19 @@ export const blogDefaultValues = {
     createdAt:new Date(),
     updatedAt:new Date(),
     metaDescription: '',
+    categoryId: '',
+    isActive: true
+}
+
+export const productDefaultValues = {
+    title: '',
+    description: '',
+    imageUrl: '',
+    createdAt:new Date(),
+    updatedAt:new Date(),
+    metaDescription: '',
+    price:null,
+    count:1,
     categoryId: '',
     isActive: true
 }

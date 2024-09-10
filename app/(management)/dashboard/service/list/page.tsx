@@ -69,7 +69,7 @@ const ServiceList = async () => {
                                             </Link>
                                         </TableCell>
                                         <TableCell>
-                                            <DeleteConfirmation topicId={service._id} />
+                                            <DeleteConfirmation id={service._id} type='service'/>
                                         </TableCell>
                                     </TableRow>
                                 ))}

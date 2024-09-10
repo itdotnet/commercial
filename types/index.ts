@@ -89,11 +89,11 @@ export type CreateProductParams = {
         title:string
         description:string
         imageUrl:string
-        createdAt:Date
-        updatedAt:Date
+        createdAt?:Date
+        updatedAt?:Date
         metaDescription:string
         categoryId:string
-        price:number
+        price:number | null
         count:number
         isActive:boolean
     }
@@ -107,11 +107,11 @@ export type UpdateProductParams={
         title:string
         description:string
         imageUrl:string
-        createdAt:Date,
-        updatedAt:Date,
+        createdAt?:Date,
+        updatedAt?:Date,
         metaDescription:string
         categoryId:string
-        price:number
+        price:number | null
         count:number
         isActive:boolean
     }
