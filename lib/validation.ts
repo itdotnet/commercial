@@ -27,10 +27,8 @@ export const productFormSchema = z.object({
     imageUrl: z.string(),
     metaDescription: z.string().min(3, 'Meta description must be at least 3 characters').max(160, 'Meta description must be less than 160 characters'),
     categoryId: z.string(),
-    price:z.number().positive()
-    .nullable()
-    .transform((value) => value ),
-    count:z.number().min(0,'Count must be at least 0'),
+    price:z.coerce.number({invalid_type_error:"Greater than or equal to 1"}).int().gte(1,"Greater than or equal to 1"),
+    count:z.coerce.number({invalid_type_error: 'Greater than or equal to 0'}).int().gte(0,"Greater than or equal to 0"),
     isActive: boolean(),
     createdAt:z.date().optional(),
     updatedAt:z.date().optional()

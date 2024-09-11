@@ -7,7 +7,9 @@ import {
     LayoutGrid,
     LucideIcon,
     Wrench,
-    Warehouse
+    Warehouse,
+    ShoppingBag,
+    ShoppingBasket
   } from "lucide-react";
 
   type Submenu = {
@@ -86,7 +88,7 @@ export function getMenuList(pathname: string): Group[] {
             href: "",
             label: "Products",
             active: pathname.includes("/Product"),
-            icon: Warehouse,
+            icon: ShoppingBag,
             submenus: [
               {
                 href: "/dashboard/product/list",
@@ -104,7 +106,7 @@ export function getMenuList(pathname: string): Group[] {
             href: "",
             label: "Orders",
             active: pathname.includes("/Order"),
-            icon: Warehouse,
+            icon: ShoppingBasket,
             submenus: [
               {
                 href: "/dashboard/order/list",
@@ -118,20 +120,20 @@ export function getMenuList(pathname: string): Group[] {
               }
             ]
           },
-          {
-            href: "/categories",
-            label: "Categories",
-            active: pathname.includes("/categories"),
-            icon: Bookmark,
-            submenus: []
-          },
-          {
-            href: "/tags",
-            label: "Tags",
-            active: pathname.includes("/tags"),
-            icon: Tag,
-            submenus: []
-          }
+          // {
+          //   href: "/categories",
+          //   label: "Categories",
+          //   active: pathname.includes("/categories"),
+          //   icon: Bookmark,
+          //   submenus: []
+          // },
+          // {
+          //   href: "/tags",
+          //   label: "Tags",
+          //   active: pathname.includes("/tags"),
+          //   icon: Tag,
+          //   submenus: []
+          // }
         ]
       },
       {

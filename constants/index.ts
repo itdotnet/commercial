@@ -44,8 +44,8 @@ export const productDefaultValues = {
     createdAt:new Date(),
     updatedAt:new Date(),
     metaDescription: '',
-    price:null,
-    count:1,
+    //price:Number,
+    //count:1,
     categoryId: '',
     isActive: true
 }
