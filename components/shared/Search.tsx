@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation';
 import { formUrlQuery, removeKeysFromQuery } from '@/lib/utils';
 
-const Search = ({ placeholder = 'Search title...' }: { placeholder?: string }) => {
+const Search = ({ placeholder = 'Search title...',paramKey="query" }: { placeholder?: string,paramKey?:string }) => {
     const [query, setQuery] = useState('');
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -18,14 +18,14 @@ const Search = ({ placeholder = 'Search title...' }: { placeholder?: string }) =
             if (query) {
                 newUrl = formUrlQuery({
                     params: searchParams.toString(),
-                    key: 'query',
+                    key: paramKey,
                     value: query
                 });
             }
             else {
                 newUrl = removeKeysFromQuery({
                     params: searchParams.toString(),
-                    keysToRemove: ['query']
+                    keysToRemove: [paramKey]
                 });
             }
 

@@ -9,10 +9,11 @@ import { getAllCategories } from '@/lib/actions/category.actions';
 import { getAllCategories as getAllProductCategories} from '@/lib/actions/productCategory.actions';
 
 type CategoryFilterProps={
-    type:"blogCategory" | "productCategory"
+    type:"blogCategory" | "productCategory",
+    paramKey?:string
 }
 
-const CategoryFilter = ({type}:CategoryFilterProps) => {
+const CategoryFilter = ({type,paramKey="category"}:CategoryFilterProps) => {
     const [categories,setCategories]=useState<ICategory[]>([]);
     const searchParams=useSearchParams();
     const router=useRouter();
@@ -38,7 +39,7 @@ const CategoryFilter = ({type}:CategoryFilterProps) => {
         if(category && category!='All'){
             newUrl=formUrlQuery({
                 params:searchParams.toString(),
-                key:'category',
+                key:paramKey,
                 value:category,
                 keysToRemove:['page']
             });
@@ -46,7 +47,7 @@ const CategoryFilter = ({type}:CategoryFilterProps) => {
         else{
             newUrl=removeKeysFromQuery({
                 params:searchParams.toString(),
-                keysToRemove:['category']
+                keysToRemove:[paramKey]
             })
         }
 

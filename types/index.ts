@@ -125,7 +125,7 @@ export type DeleteProductParams={
 
 export type GetAllProductsParams={
     query:string
-    category:string
+    category?:string
     limit:number
     page:number
 }

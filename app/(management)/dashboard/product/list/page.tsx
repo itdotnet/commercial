@@ -97,7 +97,7 @@ const ProductList = async ({ searchParams }: SearchParamProps) => {
                                     ))}
                                 </TableBody>
                             </Table>
-                            <Pagination urlParamName='page' page={page} totalPages={products?.totalPages} />
+                            <Pagination page={page} totalPages={products?.totalPages} />
                     </div>
                 </CardContent>
             </Card>
