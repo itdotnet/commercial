@@ -1,6 +1,6 @@
 'use server'
 
-import { CreateTopicParams, DeleteTopicParams, GetAllTopicsParams, UpdateTopicParams } from "@/types";
+import { CreateTopicParams, DeleteTopicParams, GetAllTopicsParams, GetRelatedTopicsByCategoryParams, UpdateTopicParams } from "@/types";
 import { handleError } from "../utils";
 import { connectToDatabase } from "../database";
 import User from "../database/models/user.model";

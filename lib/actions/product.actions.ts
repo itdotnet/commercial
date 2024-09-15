@@ -1,6 +1,6 @@
 'use server'
 
-import { CreateProductParams, DeleteProductParams, GetAllProductsParams, UpdateProductParams } from "@/types";
+import { CreateProductParams, DeleteProductParams, GetAllProductsParams, GetRelatedProductsByCategoryParams, UpdateProductParams } from "@/types";
 import { handleError } from "../utils";
 import { connectToDatabase } from "../database";
 import User from "../database/models/user.model";
@@ -109,6 +109,29 @@ export async function deleteProduct({productId,path}:DeleteProductParams) {
 
         const deleteProduct=await Product.findByIdAndDelete(productId);
         if(deleteProduct) revalidatePath(path);
+    } catch (error) {
+        handleError(error);
+    }
+}
+
+// GET RELATED PRODUCTS: PRODUCTS WITH SAME CATEGORY
+export async function getRelatedProductsByCategory({categoryId,productId,limit=3,page=1}:GetRelatedProductsByCategoryParams){
+    try {
+        await connectToDatabase();
+
+        const skipAmount=(Number(page)-1) * limit;
+        const conditions={$and:[{category:categoryId},{_id:{$ne:productId}}]};
+
+        const productsQuery=Product.find(conditions)
+            .sort({createdAt:"desc"})
+            .skip(skipAmount)
+            .limit(limit);
+
+        const products=await populateProduct(productsQuery);
+        const productsCount=await Product.countDocuments(conditions);
+
+        return {data:JSON.parse(JSON.stringify(products)),totalPages:Math.ceil(productsCount)};
+
     } catch (error) {
         handleError(error);
     }

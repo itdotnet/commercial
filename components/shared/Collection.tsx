@@ -3,6 +3,9 @@ import { IService } from "@/lib/database/models/service.model"
 import { IProduct } from "@/lib/database/models/product.model"
 import Card from "./Card"
 import Pagination from "./Pagination"
+import { getUserById } from "@/lib/actions/user.actions"
+import { auth } from "@clerk/nextjs/server"
+import { IUser } from "@/lib/database/models/user.model"
 
 type CollectionProps = {
     topics?: ITopic[],
@@ -17,7 +20,7 @@ type CollectionProps = {
     collectionType: 'Events_Organized' | 'My_Tickets' | 'All_Events'
 }
 
-const Collection = ({
+const Collection =async ({
     topics,
     services,
     products,
@@ -25,11 +28,17 @@ const Collection = ({
     emptyStateSubtext,
     page,
     totalPages = 0,
-    collectionType,
     urlParamName
 }: CollectionProps) => {
-    const hasOrderLink = collectionType === 'Events_Organized';
-    const hidePrice = collectionType === 'My_Tickets';
+    const { sessionClaims } = auth();
+    const userId = sessionClaims?.userId as string;
+
+    let isAdmin=false;
+    if(userId){
+        const user=await getUserById(userId) as IUser;
+        isAdmin=user.role==="admin";
+    }
+
     return (
         <>
             {topics || services || products ? (
@@ -38,7 +47,7 @@ const Collection = ({
                         {topics && topics.map((entity) => {
                             return (
                                 <li key={entity._id} className="flex justify-center">
-                                    {topics && <Card topic={entity} hidePrice={hidePrice} />}
+                                    {topics && <Card topic={entity} isAdmin={isAdmin}/>}
                                 </li>
                             )
                         })}
@@ -46,7 +55,7 @@ const Collection = ({
                         {services && services.map((entity) => {
                             return (
                                 <li key={entity._id} className="flex justify-center">
-                                    {services && <Card service={entity} hidePrice={hidePrice} />}
+                                    {services && <Card service={entity} isAdmin={isAdmin}/>}
                                 </li>
                             )
                         })}
@@ -54,7 +63,7 @@ const Collection = ({
                         {products && products.map((entity) => {
                             return (
                                 <li key={entity._id} className="flex justify-center">
-                                    {products && <Card product={entity} hasOrderLink={hasOrderLink} hidePrice={hidePrice} />}
+                                    {products && <Card product={entity} isAdmin={isAdmin}/>}
                                 </li>
                             )
                         })}

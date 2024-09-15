@@ -1,6 +1,6 @@
 'use server'
 
-import { CreateTopicParams, DeleteTopicParams, GetAllTopicsParams, UpdateTopicParams } from "@/types";
+import { CreateTopicParams, DeleteTopicParams, GetAllTopicsParams, GetRelatedTopicsByCategoryParams, UpdateTopicParams } from "@/types";
 import { handleError } from "../utils";
 import { connectToDatabase } from "../database";
 import User from "../database/models/user.model";
@@ -109,6 +109,29 @@ export async function deleteTopic({topicId,path}:DeleteTopicParams) {
 
         const deleteTopic=await Topic.findByIdAndDelete(topicId);
         if(deleteTopic) revalidatePath(path);
+    } catch (error) {
+        handleError(error);
+    }
+}
+
+// GET RELATED TOPICS: TOPICS WITH SAME CATEGORY
+export async function getRelatedTopicsByCategory({categoryId,topicId,limit=3,page=1}:GetRelatedTopicsByCategoryParams){
+    try {
+        await connectToDatabase();
+
+        const skipAmount=(Number(page)-1) * limit;
+        const conditions={$and:[{category:categoryId},{_id:{$ne:topicId}}]};
+
+        const topicsQuery=Topic.find(conditions)
+            .sort({createdAt:"desc"})
+            .skip(skipAmount)
+            .limit(limit);
+
+        const topics=await populateTopic(topicsQuery);
+        const topicsCount=await Topic.countDocuments(conditions);
+
+        return {data:JSON.parse(JSON.stringify(topics)),totalPages:Math.ceil(topicsCount)};
+
     } catch (error) {
         handleError(error);
     }

@@ -82,6 +82,13 @@ export type GetAllTopicsParams={
     page:number
 }
 
+export type GetRelatedTopicsByCategoryParams = {
+    categoryId: string
+    topicId: string
+    limit?: number
+    page: number | string
+}
+
 // ====== PRODUCT PARAMS
 export type CreateProductParams = {
     userId:string
@@ -128,4 +135,11 @@ export type GetAllProductsParams={
     category?:string
     limit:number
     page:number
+}
+
+export type GetRelatedProductsByCategoryParams = {
+    categoryId: string
+    productId: string
+    limit?: number
+    page: number | string
 }

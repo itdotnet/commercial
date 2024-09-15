@@ -9,27 +9,27 @@ import { SearchParamProps } from '@/types'
 import Search from '@/components/shared/Search'
 import CategoryFilter from '@/components/shared/CategoryFilter'
 
-const page =async ({searchParams}:SearchParamProps) => {
+const page = async ({ searchParams }: SearchParamProps) => {
   const topicSearchText = (searchParams?.query as string) || '';
   const topicCategory = (searchParams?.category as string) || '';
 
   const productSearchText = (searchParams?.productQuery as string) || '';
   const productCategory = (searchParams?.productCategory as string) || '';
 
-  const topics=await getAllTopics({
-    query:topicSearchText,
-    page:1,
-    category:topicCategory,
-    limit:6
+  const topics = await getAllTopics({
+    query: topicSearchText,
+    page: 1,
+    category: topicCategory,
+    limit: 6
   });
 
-  const services=await getAllServices();
+  const services = await getAllServices();
 
-  const products=await getAllProducts({
-    query:productSearchText,
-    page:1,
-    category:productCategory,
-    limit:6
+  const products = await getAllProducts({
+    query: productSearchText,
+    page: 1,
+    category: productCategory,
+    limit: 6
   });
 
   return (
@@ -58,27 +58,33 @@ const page =async ({searchParams}:SearchParamProps) => {
       </section>
 
       <section id="topics" className="wrapper my-8 flex flex-col gap-8 md:gap-12">
-        <h2 className="h2-bold">Newest Posts</h2>
+        <h2 className="h2-bold">Latest Posts</h2>
 
         <div className="flex flex-col w-full gap-5 md:flex-row">
           <Search />
-          <CategoryFilter type='blogCategory'/>
+          <CategoryFilter type='blogCategory' />
         </div>
 
         <Collection topics={topics?.data} emptyTitle="No Topics Found" emptyStateSubtext="Come back later"
           collectionType="My_Tickets" limit={6} page={1} totalPages={0} />
+        {topics && topics.totalPages>6 && <Button size="lg" asChild variant="outline" className='button m-auto w-full md:w-1/2'>
+          <Link href="/blog">See All Topics</Link>
+        </Button>}
       </section>
 
       <section id="products" className="wrapper my-8 flex flex-col gap-8 md:gap-12">
-        <h2 className="h2-bold">Newest Products</h2>
+        <h2 className="h2-bold">Latest Products</h2>
 
         <div className="flex flex-col w-full gap-5 md:flex-row">
-          <Search paramKey='productQuery'/>
-          <CategoryFilter type='productCategory' paramKey="productCategory"/>
+          <Search paramKey='productQuery' />
+          <CategoryFilter type='productCategory' paramKey="productCategory" />
         </div>
 
         <Collection products={products?.data} emptyTitle="No Products Found" emptyStateSubtext="Come back later"
           collectionType="All_Events" limit={6} page={1} totalPages={0} />
+        {products && products.totalPages>6 && <Button size="lg" asChild variant="outline" className='button m-auto w-full md:w-1/2'>
+          <Link href="/products">See All Products</Link>
+        </Button>}
       </section>
     </>
   )
