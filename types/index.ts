@@ -1,3 +1,5 @@
+export const noImage="/assets/images/no-image.png"
+
 // ====== USER PARAMS
 export type CreateUserParams={
     clerkId:string

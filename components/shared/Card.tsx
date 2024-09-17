@@ -7,6 +7,7 @@ import React from 'react'
 import DeleteConfirmation from './DeleteConfirmation';
 import { IService } from '@/lib/database/models/service.model'
 import { IProduct } from '@/lib/database/models/product.model'
+import { noImage } from '@/types'
 
 type CardProps = {
     topic?: ITopic,
@@ -21,14 +22,14 @@ const Card = ({ topic, service, product, isAdmin }: CardProps) => {
     const entity = topic != null ? topic : service != null ? service : product;
     const category = topic != null ? topic.category : product != null ? product.category : null;
 
-    const type = topic != null ? "blog" : service != null ? "service" : "product";
+    const type = topic != null ? "post" : service != null ? "service" : "product";
 
     return (
         <>
             {entity && <div className="group relative flex min-h-[380px] w-full max-w-[400px] flex-col overflow-hidden rounded-xl bg-white shadow-md transition-all hover:shadow-lg md:min-h-[438px]">
                 <Link
-                    href={`/${type}s/${entityId}`}
-                    style={{ background: `url(${entity.imageUrl != "" ? entity.imageUrl : "/assets/images/no-image.png"})`, backgroundSize: `${entity.imageUrl != "" ? "cover" : "contain"}`, backgroundRepeat: "no-repeat", backgroundPosition: "center" }}
+                    href={`/${type}/${entityId}`}
+                    style={{ background: `url(${entity.imageUrl != "" ? entity.imageUrl : noImage})`, backgroundSize: `${entity.imageUrl != "" ? "cover" : "contain"}`, backgroundRepeat: "no-repeat", backgroundPosition: "center" }}
                     className="flex-center flex-grow bg-gray-50 bg-cover bg-center text-grey-500"
                 />
 
@@ -58,7 +59,7 @@ const Card = ({ topic, service, product, isAdmin }: CardProps) => {
                         {formatDateTime(entity.createdAt).dateTime}
                     </p>
 
-                    <Link href={`/${type}s/${entity._id}`}>
+                    <Link href={`/${type}/${entity._id}`}>
                         <p className="p-medium-16 md:p-medium-20 line-clamp-2 flex-1 text-black">{entity.title}</p>
                     </Link>
 
