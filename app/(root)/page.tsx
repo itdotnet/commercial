@@ -54,7 +54,7 @@ const page = async ({ searchParams }: SearchParamProps) => {
         <h2 className="h2-bold">Services</h2>
 
         <Collection services={services} emptyTitle="No Services Found" emptyStateSubtext="Come back later"
-          collectionType="My_Tickets" limit={6} page={1} totalPages={0} />
+          limit={6} page={1} totalPages={0} />
       </section>
 
       <section id="topics" className="wrapper my-8 flex flex-col gap-8 md:gap-12">
@@ -66,7 +66,7 @@ const page = async ({ searchParams }: SearchParamProps) => {
         </div>
 
         <Collection topics={topics?.data} emptyTitle="No Topics Found" emptyStateSubtext="Come back later"
-          collectionType="My_Tickets" limit={6} page={1} totalPages={0} />
+          limit={6} page={1} totalPages={0} />
         {topics && topics.totalPages>6 && <Button size="lg" asChild variant="outline" className='button m-auto w-full md:w-1/2'>
           <Link href="/blog">See All Topics</Link>
         </Button>}
@@ -81,7 +81,7 @@ const page = async ({ searchParams }: SearchParamProps) => {
         </div>
 
         <Collection products={products?.data} emptyTitle="No Products Found" emptyStateSubtext="Come back later"
-          collectionType="All_Events" limit={6} page={1} totalPages={0} />
+          limit={6} page={1} totalPages={0} />
         {products && products.totalPages>6 && <Button size="lg" asChild variant="outline" className='button m-auto w-full md:w-1/2'>
           <Link href="/products">See All Products</Link>
         </Button>}
