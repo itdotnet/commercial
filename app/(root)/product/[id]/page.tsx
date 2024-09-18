@@ -5,6 +5,7 @@ import { formatDateTime } from '@/lib/utils';
 import Collection from '@/components/shared/Collection';
 import { getProductById, getRelatedProductsByCategory } from '@/lib/actions/product.actions';
 import { IProduct } from '@/lib/database/models/product.model';
+import CheckoutButton from '@/components/shared/CheckoutButton';
 
 const ProductDetails = async ({ params: { id }, searchParams }: SearchParamProps) => {
     const details = await getProductById(id) as IProduct;
@@ -24,6 +25,8 @@ const ProductDetails = async ({ params: { id }, searchParams }: SearchParamProps
                     <div className='flex w-full flex-col gap-8 p-5 md:p-10'>
                         <div className='flex flex-col gap-6'>
                             <h2 className='h2-bold'>{details.title}</h2>
+
+                            <CheckoutButton product={details}/>
 
                             <div className='flex flex-col gap-3 sm:flex-row sm:items-center'>
                                 {details.category && <p className='p-medium-16 rounded-full bg-grey-500/10 px-4 py-2.5 text-grey-500'>

@@ -145,3 +145,30 @@ export type GetRelatedProductsByCategoryParams = {
     limit?: number
     page: number | string
 }
+
+// ====== ORDER PARAMS
+export type CheckoutOrderParams={
+    productTitle:string
+    productId: string
+    price: string
+    buyerId: string
+}
+
+export type CreateOrderParams = {
+    stripeId: string
+    productId: string
+    buyerId: string
+    totalAmount: string
+    createdAt: Date
+}
+
+export type GetOrdersByProductParams = {
+    productId: string
+    searchString: string
+}
+
+export type GetOrdersByUserParams = {
+    userId: string | null
+    limit?: number
+    page: string | number | null
+}
