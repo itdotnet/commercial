@@ -150,7 +150,7 @@ export type GetRelatedProductsByCategoryParams = {
 export type CheckoutOrderParams={
     productTitle:string
     productId: string
-    price: string
+    price: number
     buyerId: string
 }
 

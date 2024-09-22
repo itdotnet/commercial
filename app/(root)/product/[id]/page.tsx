@@ -48,7 +48,7 @@ const ProductDetails = async ({ params: { id }, searchParams }: SearchParamProps
             </section>
 
             <section className='wrapper'>
-                <p dangerouslySetInnerHTML={{ __html: details.description }}></p>
+                <div dangerouslySetInnerHTML={{ __html: details.description }}></div>
             </section>
 
             {/* posts with the same category */}

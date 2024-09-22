@@ -1,3 +1,5 @@
+'use client'
+
 import { IProduct } from '@/lib/database/models/product.model'
 import { SignedOut, SignedIn, useUser } from '@clerk/nextjs'
 import React from 'react'

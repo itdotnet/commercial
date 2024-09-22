@@ -74,7 +74,7 @@ const Card = ({ topic, service, product, isAdmin }: CardProps) => {
                         {entity.organizer.firstName} {entity.organizer.lastName}
                     </p>
 
-                    {product && (
+                    {product && isAdmin &&(
                         <Link href={`/orders?productId=${entity._id}`} className="flex gap-2">
                             <p className="text-primary-500">Order Details</p>
                             <Image src="/assets/icons/arrow.svg" alt="search" width={10} height={10} />
