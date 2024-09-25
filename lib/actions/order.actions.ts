@@ -1,7 +1,7 @@
 "use server"
 
 import Stripe from 'stripe';
-import { CheckoutOrderParams, CreateOrderParams, GetOrdersByProductParams, GetOrdersByUserParams } from "@/types";
+import { CheckoutOrderParams, CreateOrderParams, DeleteOrderParams, GetAllOrdersParams, GetOrdersByProductParams, GetOrdersByUserParams } from "@/types";
 import { redirect } from 'next/navigation';
 import { handleError } from '../utils';
 import { connectToDatabase } from '../database';
@@ -9,6 +9,8 @@ import Order from '../database/models/order.model';
 import { ObjectId } from 'mongodb';
 import Product from '../database/models/product.model';
 import User from '../database/models/user.model';
+import { getCategoryByName } from './product.actions';
+import { revalidatePath } from 'next/cache';
 
 export const checkoutOrder = async (order: CheckoutOrderParams) => {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
@@ -100,8 +102,8 @@ export const getOrdersByProduct = async ({ searchString, productId }: GetOrdersB
                     _id: 1,
                     totalAmount: 1,
                     createdAt: 1,
-                    eventTitle: '$product.title',
-                    eventId: '$product._id',
+                    productTitle: '$product.title',
+                    productId: '$product._id',
                     buyer: {
                         $concat: ['$buyer.firstName', { $ifNull: ['$buyer.lastName', ''] }],
                     },
@@ -146,6 +148,85 @@ export const getOrdersByUser = async ({ userId, limit = 3, page }: GetOrdersByUs
         const ordersCount = await Order.distinct('product._id').countDocuments(conditions);
 
         return { data: JSON.parse(JSON.stringify(orders)), totalPages: Math.ceil(ordersCount / limit) };
+    } catch (error) {
+        handleError(error);
+    }
+}
+
+export const getAllOrders=async({category,limit=3,page}:GetAllOrdersParams)=>{
+    try {
+        await connectToDatabase();
+
+        const skipAmount = (Number(page) - 1) * limit;
+        const categoryCondition=category?await getCategoryByName(category):null;
+        const conditions={
+            $and:[categoryCondition?{product:{'category._id':new ObjectId('66c454949ef36a6d91bf90fb')}}:{}]
+        }
+
+        const orders = await Order.aggregate([
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'buyer',
+                    foreignField: '_id',
+                    as: 'buyer',
+                },
+            },
+            {
+                $unwind: '$buyer',
+            },
+            {
+                $lookup: {
+                    from: 'products',
+                    localField: 'product',
+                    foreignField: '_id',
+                    as: 'product',
+                },
+            },
+            {
+                $unwind: '$product',
+            },
+            {
+                $project: {
+                    _id: 1,
+                    totalAmount: 1,
+                    createdAt: 1,
+                    productTitle: '$product.title',
+                    productId: '$product._id',
+                    categoryId:'$product.category',
+                    buyer: {
+                        $concat: ['$buyer.firstName', { $ifNull: ['$buyer.lastName', ''] }],
+                    },
+                },
+            },
+            {
+                $match: {
+                    $and: [categoryCondition?{ categoryId: categoryCondition._id }:{}],
+                },
+            },
+            {
+                $skip:skipAmount,
+            },
+            {
+                $limit:3
+            }
+        ]);
+
+        const ordersCount = await Order.countDocuments(categoryCondition?{ categoryId: categoryCondition._id }:{});
+
+        return { data: JSON.parse(JSON.stringify(orders)), totalPages: Math.ceil(ordersCount / limit) };
+    } catch (error) {
+        handleError(error);
+    }
+}
+
+//DELETE ORDER
+export async function deleteOrder({orderId,path}:DeleteOrderParams) {
+    try {
+        await connectToDatabase();
+
+        const deleteOrder=await Order.findByIdAndDelete(orderId);
+        if(deleteOrder) revalidatePath(path);
     } catch (error) {
         handleError(error);
     }

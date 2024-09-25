@@ -18,8 +18,9 @@ import {
 import { deleteTopic } from '@/lib/actions/topic.actions'
 import { deleteProduct } from '@/lib/actions/product.actions'
 import { deleteService } from '@/lib/actions/service.actions'
+import { deleteOrder } from '@/lib/actions/order.actions'
 
-const DeleteConfirmation = ({id,type}:{id:string,type:"topic" | "product" | "service"}) => {
+const DeleteConfirmation = ({id,type}:{id:string,type:"topic" | "product" | "service" | "order"}) => {
     const pathname=usePathname();
     let [isPending,startTransition]=useTransition();
 
@@ -47,8 +48,10 @@ const DeleteConfirmation = ({id,type}:{id:string,type:"topic" | "product" | "ser
                                     await deleteTopic({ topicId:id, path: pathname })
                                 else if(type==="product")
                                     await deleteProduct({ productId:id, path: pathname })
-                                else
+                                else if(type==="service")
                                     await deleteService({ topicId:id, path: pathname })
+                                else
+                                    await deleteOrder({ orderId:id, path: pathname })
                             })
                         }>
                         {isPending ? 'Deleting...' : 'Delete'}

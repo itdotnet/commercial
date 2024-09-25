@@ -8,7 +8,7 @@ import { revalidatePath } from "next/cache";
 import ProductCategory from "../database/models/productCategory.model";
 import Product from "../database/models/product.model";
 
-const getCategoryByName=async (name:string)=>{
+export const getCategoryByName=async (name:string)=>{
     return ProductCategory.findOne({name:{$regex:name,$options:'i'}});
 }
 

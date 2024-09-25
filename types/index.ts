@@ -172,3 +172,14 @@ export type GetOrdersByUserParams = {
     limit?: number
     page: string | number | null
 }
+
+export type GetAllOrdersParams={
+    category?:string
+    limit:number
+    page:number
+}
+
+export type DeleteOrderParams={
+    orderId:string
+    path:string
+}
