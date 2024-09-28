@@ -73,6 +73,7 @@ const ProductList = async ({ searchParams }: SearchParamProps) => {
                                         <TableHead>Price</TableHead>
                                         <TableHead>Count</TableHead>
                                         <TableHead>Created Date</TableHead>
+                                        <TableHead>Orders</TableHead>
                                         <TableHead>Edit</TableHead>
                                         <TableHead>Delete</TableHead>
                                     </TableRow>
@@ -85,6 +86,11 @@ const ProductList = async ({ searchParams }: SearchParamProps) => {
                                             <TableCell className="font-medium">{product.price} $</TableCell>
                                             <TableCell className="font-medium">{product.count}</TableCell>
                                             <TableCell className="font-medium">{formatDateTime(product.createdAt).dateOnly}</TableCell>
+                                            <TableCell>
+                                                <Link href={`/dashboard/order/${product._id}/product`} className="flex gap-2">
+                                                    <Image src="/assets/icons/shopping-basket.svg" alt="shopping-basket" width={20} height={20} />
+                                                </Link>
+                                            </TableCell>
                                             <TableCell>
                                                 <Link href={`/dashboard/product/${product._id}/update`} className="flex gap-2">
                                                     <Image src="/assets/icons/edit.svg" alt="edit" width={20} height={20} />

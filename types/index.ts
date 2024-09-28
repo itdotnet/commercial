@@ -164,7 +164,8 @@ export type CreateOrderParams = {
 
 export type GetOrdersByProductParams = {
     productId: string
-    searchString: string
+    limit:number
+    page:number
 }
 
 export type GetOrdersByUserParams = {

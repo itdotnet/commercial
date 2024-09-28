@@ -1,24 +1,13 @@
 import React from 'react'
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table"
-import { formatDateTime } from '@/lib/utils';
 import Link from 'next/link';
-import DeleteConfirmation from '@/components/shared/DeleteConfirmation';
 import { ContentLayout } from '@/app/(management)/_components/content-layout';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { Card, CardContent } from '@/components/ui/card';
-import { IOrder, IOrderItem } from '@/lib/database/models/order.model';
 import { getAllOrders } from '@/lib/actions/order.actions';
 import { SearchParamProps } from '@/types';
 import CategoryFilter from '@/components/shared/CategoryFilter';
 import Pagination from '@/components/shared/Pagination';
+import OrdersTable from '@/app/(management)/_components/OrdersTable';
 
 const OrderList = async ({searchParams}:SearchParamProps) => {
     const page=Number(searchParams?.page) || 1;
@@ -57,32 +46,10 @@ const OrderList = async ({searchParams}:SearchParamProps) => {
                         <div className='w-96 my-2'>
                             <CategoryFilter type='productCategory'/>
                         </div>
-                        <Table className='mb-10'>
-                            <TableCaption>A list of your orders.</TableCaption>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Order Owner</TableHead>
-                                    <TableHead>Product Title</TableHead>
-                                    <TableHead>Product Price</TableHead>
-                                    <TableHead>Created Date</TableHead>
-                                    <TableHead>Delete</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {list.map((order:IOrderItem) => (
-                                    <TableRow key={order._id}>
-                                        <TableCell className="font-medium">{order.buyer}</TableCell>
-                                        <TableCell className="font-medium">{order.productTitle}</TableCell>
-                                        <TableCell className="font-medium">{order.totalAmount} $</TableCell>
-                                        <TableCell className="font-medium">{formatDateTime(order.createdAt).dateOnly}</TableCell>
-                                        <TableCell>
-                                            <DeleteConfirmation id={order._id} type='order'/>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                        <OrdersTable productList={list}/>
+                        {orders?.totalPages! > 1 && 
                         <Pagination page={page} totalPages={orders?.totalPages} />
+                        }
                     </div>
                 </CardContent>
             </Card>

@@ -67,9 +67,11 @@ export const createOrder = async (order: CreateOrderParams) => {
 }
 
 //GET ORDERS BY PRODUCT
-export const getOrdersByProduct = async ({ searchString, productId }: GetOrdersByProductParams) => {
+export const getOrdersByProduct = async ({ productId,limit=3,page }: GetOrdersByProductParams) => {
     try {
         await connectToDatabase();
+
+        const skipAmount = (Number(page) - 1) * limit;
 
         if (!productId) throw new Error('ProductId Is Required');
         const productObjectId = new ObjectId(productId);
@@ -105,18 +107,27 @@ export const getOrdersByProduct = async ({ searchString, productId }: GetOrdersB
                     productTitle: '$product.title',
                     productId: '$product._id',
                     buyer: {
-                        $concat: ['$buyer.firstName', { $ifNull: ['$buyer.lastName', ''] }],
+                        $concat: ['$buyer.firstName',' ' ,{ $ifNull: ['$buyer.lastName', ''] }],
                     },
                 },
             },
             {
                 $match: {
-                    $and: [{ productId: productObjectId }, { buyer: { $regex: RegExp(searchString, 'i') } }],
+                    $and: [{ productId: productObjectId }],
                 },
             },
+            {
+                $skip:skipAmount
+            },
+            {
+                $limit:limit
+            }
+
         ]);
 
-        return JSON.parse(JSON.stringify(orders));
+        const ordersCount = await Order.distinct('product._id').countDocuments({ productId: productObjectId });
+
+        return { data: JSON.parse(JSON.stringify(orders)), totalPages: Math.ceil(ordersCount / limit) };
     } catch (error) {
         handleError(error);
     }
@@ -195,7 +206,7 @@ export const getAllOrders=async({category,limit=3,page}:GetAllOrdersParams)=>{
                     productId: '$product._id',
                     categoryId:'$product.category',
                     buyer: {
-                        $concat: ['$buyer.firstName', { $ifNull: ['$buyer.lastName', ''] }],
+                        $concat: ['$buyer.firstName',' ', { $ifNull: ['$buyer.lastName', ''] }],
                     },
                 },
             },
